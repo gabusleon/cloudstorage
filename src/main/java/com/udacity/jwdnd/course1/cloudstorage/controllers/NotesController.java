@@ -64,7 +64,7 @@ public class NotesController {
         }else{
             model.addAttribute("noteError", notesError);
         }
-        model.addAttribute("allNotesByUser", notesService.readNotes(userLogged.getUserid()));
+        //model.addAttribute("allNotesByUser", notesService.readNotes(userLogged.getUserid()));
         redirectAttributes.addFlashAttribute("activeTab", "notes");
 
         return "redirect:/home";
@@ -81,7 +81,7 @@ public class NotesController {
             }else{
                 model.addAttribute("noteSuccess", "You successfully deleted your Note!");
             }
-            model.addAttribute("allNotesByUser", notesService.readNotes(userLogged.getUserid()));
+            //model.addAttribute("allNotesByUser", notesService.readNotes(userLogged.getUserid()));
             redirectAttributes.addFlashAttribute("activeTab", "notes");
 
             return "redirect:/home";

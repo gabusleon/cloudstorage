@@ -77,7 +77,7 @@ public class FilesController {
         }else{
             model.addAttribute("error", uploadError);
         }
-        model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
+        //model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
         redirectAttributes.addFlashAttribute("activeTab", "files");
 
         return "redirect:/home";
@@ -129,7 +129,7 @@ public class FilesController {
             }else{
                 model.addAttribute("success", "You successfully deleted your file!");
             }
-            model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
+            //model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
             redirectAttributes.addFlashAttribute("activeTab", "notes");
 
             return "redirect:/home";
