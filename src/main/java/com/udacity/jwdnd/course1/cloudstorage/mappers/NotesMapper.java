@@ -11,17 +11,17 @@ public interface NotesMapper {
     @Select("SELECT * FROM Notes WHERE userid = #{userid}")
     List<Notes> getNotes(Integer userid);
 
-    @Insert("INSERT INTO Notes (notetitle, notedescription, userid) VALUES (#{notetitle}, #{notedescription}, #{userid}")
+    @Select("SELECT * FROM Notes WHERE noteid = #{noteid}")
+    Notes getNote(Integer noteid);
+
+    @Insert("INSERT INTO Notes (notetitle, notedescription, userid) VALUES (#{notetitle}, #{notedescription}, #{userid})")
     @Options(useGeneratedKeys = true, keyProperty = "noteid")
     int insertNote(Notes note);
 
-    @Update("UPDATE Notes SET notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid} AND userid = #{userid}")
+    @Update("UPDATE Notes SET notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")
     int updateNoteById(Notes note);
 
-    @Delete("DELETE FROM Notes Where noteid = #{noteid} AND userid = #{userid}")
-    int deleteNoteById(Integer noteid, Integer userid);
-
-
-
+    @Delete("DELETE FROM Notes Where noteid = #{noteid}")
+    int deleteNoteById(Integer noteid);
 
 }

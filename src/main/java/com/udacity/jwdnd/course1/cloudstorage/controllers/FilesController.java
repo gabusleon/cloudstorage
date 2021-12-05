@@ -16,10 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 @Controller
 public class FilesController {
@@ -30,8 +30,8 @@ public class FilesController {
         this.filesService = filesService;
         this.userService = userService;
     }
-
-    @GetMapping("/file-upload")
+/*
+    @GetMapping("/files")
     public String uploadFilePageView(Model model, Authentication authentication){
         Users userLogged = userService.getUser(authentication.getName());
         if(userLogged != null) {
@@ -41,9 +41,10 @@ public class FilesController {
             return "login";
         }
     }
+*/
 
     @PostMapping("/file-upload")
-    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model){
+    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model, RedirectAttributes redirectAttributes){
         String uploadError = null;
         Users userLogged = userService.getUser(authentication.getName());
         if(userLogged != null) {
@@ -77,7 +78,9 @@ public class FilesController {
             model.addAttribute("error", uploadError);
         }
         model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
-        return "home";
+        redirectAttributes.addFlashAttribute("activeTab", "files");
+
+        return "redirect:/home";
     }
 
     @GetMapping("/file-download/{fileid}")
@@ -116,7 +119,7 @@ public class FilesController {
     }
 
     @GetMapping("/file-delete/{fileid}")
-    public String deleteFile(@PathVariable("fileid") String fileid, Model model, Authentication authentication){
+    public String deleteFile(@PathVariable("fileid") String fileid, Model model, Authentication authentication, RedirectAttributes redirectAttributes){
         Users userLogged = userService.getUser(authentication.getName());
 
         if(userLogged != null) {
@@ -127,9 +130,11 @@ public class FilesController {
                 model.addAttribute("success", "You successfully deleted your file!");
             }
             model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
-            return "/home";
+            redirectAttributes.addFlashAttribute("activeTab", "notes");
+
+            return "redirect:/home";
         }else{
-            return "/login";
+            return "login";
         }
 
     }
