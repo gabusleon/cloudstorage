@@ -164,14 +164,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="credential : ${credentials}">
+                                <tr name = "credential-displayed-info" th:each="credential : ${credentials}">
                                     <td>
-                                        <button id="credential-displayed-edit" th:onclick="javascript:showCredentialModal( [[${credential.credentialid}]],[[${credential.url}]],[[${credential.username}]],[[${encryptionService.decryptValue(credential.password, credential.key)}]])" type="button" class="btn btn-success">Edit</button>
-                                        <a id="credential-displayed-delete" th:href ="@{/delete-credential/} + ${credential.credentialid}" class="btn btn-danger">Delete</a>
+                                        <button name="credential-displayed-edit" th:onclick="javascript:showCredentialModal( [[${credential.credentialid}]],[[${credential.url}]],[[${credential.username}]],[[${encryptionService.decryptValue(credential.password, credential.key)}]])" type="button" class="btn btn-success">Edit</button>
+                                        <a name="credential-displayed-delete" th:href ="@{/delete-credential/} + ${credential.credentialid}" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th id="credential-displayed-url" th:text="${credential.url}" scope="row">Example Credential URL</th>
-                                    <td id="credential-displayed-username" th:text="${credential.username}">Example Credential Username</td>
-                                    <td id="credential-displayed-password" th:text="${credential.password}">Example Credential Password</td>
+                                    <th name="credential-displayed-url" th:text="${credential.url}" scope="row">Example Credential URL</th>
+                                    <td name="credential-displayed-username" th:text="${credential.username}">Example Credential Username</td>
+                                    <td name="credential-displayed-password" th:text="${credential.password}">Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,6 +41,7 @@ class CloudStorageApplicationTests {
 	 * Write a test that verifies that an unauthorized user can only access the login and signup pages.
 	 */
 	@Test
+	@Order(1)
 	public void verifiesUnauthorizedAccess() {
 		driver.get("http://localhost:" + this.port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
@@ -53,6 +55,7 @@ class CloudStorageApplicationTests {
 	 * Write a test that signs up a new user, logs in, verifies that the home page is accessible, logs out, and verifies that the home page is no longer accessible.
 	 */
 	@Test
+	@Order(2)
 	public void verifiedAuthorizaedAccess(){
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);
@@ -86,6 +89,7 @@ class CloudStorageApplicationTests {
 	 * Write a test that creates a note, and verifies it is displayed.
 	 */
 	@Test
+	@Order(3)
 	public void createNote() throws InterruptedException {
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);
@@ -119,6 +123,7 @@ class CloudStorageApplicationTests {
 	 * 	Write a test that edits an existing note and verifies that the changes are displayed.
 	 */
 	@Test
+	@Order(4)
 	public void editNote() throws InterruptedException {
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);
@@ -151,12 +156,16 @@ class CloudStorageApplicationTests {
 		//verifica que la nota ha sido modificada y se muestra en la pagina home
 		Assertions.assertTrue(homePage.getDisplayedNoteTitle().getText().contains(newTitle));
 		Assertions.assertTrue(homePage.getDisplayedNoteDescription().getText().contains(newDescription));
+
+		//elimina la nota existente
+		homePage.deleteNote();
 	}
 
 	/**
 	 * Write a test that deletes a note and verifies that the note is no longer displayed.
 	 */
 	@Test
+	@Order(5)
 	public void deleteNote() throws InterruptedException {
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);
@@ -193,6 +202,7 @@ class CloudStorageApplicationTests {
 	 * Write a test that creates a set of credentials, verifies that they are displayed, and verifies that the displayed password is encrypted.
 	 */
 	@Test
+	@Order(6)
 	public void createCredential() throws InterruptedException {
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);
@@ -211,18 +221,18 @@ class CloudStorageApplicationTests {
 		loginPage.login(username, password);
 
 		//inserta una nueva credencial
-		String urlCredential = "http://www.ups.edu.ec";
-		String usernameCredential = "gleon";
-		String passwordCredential = "gleon.123";
+		String urlCredential = "http://www.wissen.edu.ec";
+		String usernameCredential = "gabriel.leon";
+		String passwordCredential = "leon.123";
 
 		driver.get("http://localhost:" + this.port + "/home");
 		homePage = new HomePage(driver);
 		homePage.createCredential(urlCredential, usernameCredential, passwordCredential);
 
 		//verifica que la credencial ha sido creada y se muestra en la pagina home. Además, que la contraseña mostrada es la encriptada
-		Assertions.assertTrue(homePage.getDisplayedCredentialURL().getText().contains(urlCredential));
-		Assertions.assertTrue(homePage.getDisplayedCredentialUsername().getText().contains(usernameCredential));
-		Assertions.assertNotEquals(homePage.getDisplayedCredentialPassword().getText(), passwordCredential);
+		Assertions.assertTrue(homePage.getCredentialDisplayedInfo().getText().contains(urlCredential));
+		Assertions.assertTrue(homePage.getCredentialDisplayedInfo().getText().contains(usernameCredential));
+		Assertions.assertNotEquals(homePage.getCredentialDisplayedInfo().getText(), passwordCredential);
 	}
 
 	/**
@@ -231,6 +241,7 @@ class CloudStorageApplicationTests {
 	 * @throws InterruptedException
 	 */
 	@Test
+	@Order(7)
 	public void editCredential() throws InterruptedException {
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);
@@ -279,6 +290,7 @@ class CloudStorageApplicationTests {
 	 * Write a test that deletes an existing set of credentials and verifies that the credentials are no longer displayed.
 	 */
 	@Test
+	@Order(8)
 	public void deleteCredential() throws InterruptedException {
 		driver.get("http://localhost:" + port + "/signup");
 		signupPage = new SignupPage(driver);

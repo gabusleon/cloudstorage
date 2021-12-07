@@ -55,20 +55,27 @@ public class HomePage {
    @FindBy(id = "credentialModalButtonSubmit")
    WebElement credentialModalButtonSubmit;
 
-   @FindBy(id = "credential-displayed-url")
+   @FindBy(name ="credential-displayed-info")
+   WebElement credentialDisplayedInfo;
+
+   @FindBy(name = "credential-displayed-url")
    WebElement credentialDisplayedUrl;
 
-   @FindBy(id = "credential-displayed-username")
+   @FindBy(name = "credential-displayed-username")
    WebElement credentialDisplayedUsarname;
 
-   @FindBy(id = "credential-displayed-password")
+   @FindBy(name = "credential-displayed-password")
    WebElement credentialDisplayedPassword;
 
-   @FindBy(id = "credential-displayed-edit")
+   @FindBy(name = "credential-displayed-edit")
    WebElement credentialDisplayedEdit;
 
-   @FindBy(id = "credential-displayed-delete")
+   @FindBy(name = "credential-displayed-delete")
    WebElement credentialDisplayedDelete;
+
+   @FindBy(name = "back-home")
+   WebElement backHomeLink;
+
 
     public HomePage(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -87,6 +94,7 @@ public class HomePage {
         this.inputNoteDescription.sendKeys(description);
         this.noteSubmitModalButton.click();
         Thread.sleep(1000);
+        this.backHomeLink.click();
     }
 
     public void editNote(String title, String description) throws InterruptedException {
@@ -100,6 +108,7 @@ public class HomePage {
         this.inputNoteDescription.sendKeys(description);
         this.noteSubmitModalButton.click();
         Thread.sleep(1000);
+        this.backHomeLink.click();
     }
 
     public void deleteNote() throws InterruptedException {
@@ -107,6 +116,7 @@ public class HomePage {
         Thread.sleep(1000);
         this.noteDisplayedDelete.click();
         Thread.sleep(1000);
+        this.backHomeLink.click();
     }
 
     public WebElement getDisplayedNoteTitle(){
@@ -127,6 +137,7 @@ public class HomePage {
         this.inputCredentialPassword.sendKeys(password);
         this.credentialModalButtonSubmit.click();
         Thread.sleep(1000);
+        this.backHomeLink.click();
     }
 
     public void editCredential(String url, String username, String password) throws InterruptedException {
@@ -145,6 +156,7 @@ public class HomePage {
 
         this.credentialModalButtonSubmit.click();
         Thread.sleep(1000);
+        this.backHomeLink.click();
     }
 
     public void showUnencryptedPassword() throws InterruptedException{
@@ -158,6 +170,7 @@ public class HomePage {
         Thread.sleep(1000);
         this.credentialDisplayedDelete.click();
         Thread.sleep(1000);
+        this.backHomeLink.click();
     }
 
     public WebElement getDisplayedCredentialURL(){
@@ -174,5 +187,9 @@ public class HomePage {
 
     public  String getInputCredentialPassword(){
         return this.inputCredentialPassword.getAttribute("value");
+    }
+
+    public WebElement getCredentialDisplayedInfo() {
+        return credentialDisplayedInfo;
     }
 }
