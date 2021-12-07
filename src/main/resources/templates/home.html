@@ -44,12 +44,14 @@
                                         <button type="submit" class="btn btn-dark">Upload</button>
                                     </div>
                                 </div>
+                                <!--
                                 <div th:if="${success}" class="alert alert-dark">
                                     <span th:text="${success}"></span>
                                 </div>
                                 <div  th:if="${error}"  class="alert alert-danger">
                                     <span th:text="${error}"></span>
                                 </div>
+                                -->
                             </div>
                         </form>
                         <div class="table-responsive">
@@ -77,14 +79,14 @@
                         <button id="new-note-modal-button" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
-
+                        <!--
                         <div th:if="${noteSuccess}" class="alert alert-dark">
                             <span th:text="${noteSuccess}"></span>
                         </div>
                         <div  th:if="${noteError}"  class="alert alert-danger">
                             <span th:text="${noteError}"></span>
                         </div>
-
+                        -->
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
                                 <thead>
@@ -143,14 +145,14 @@
                         <button id="newCredentialModalButton" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
-
+                        <!--
                         <div th:if="${credentialSuccess}" class="alert alert-dark">
                             <span th:text="${credentialSuccess}"></span>
                         </div>
                         <div  th:if="${credentialError}"  class="alert alert-danger">
                             <span th:text="${credentialError}"></span>
                         </div>
-
+                        -->
                         <div class="table-responsive">
                             <table class="table table-striped" th:object="${credentials}" id="credentialTable">
                                 <thead>

@@ -36,7 +36,7 @@ public class NotesController {
     }
 */
     @PostMapping("/save-note")
-    public String saveNote(@ModelAttribute("noteForm") NoteForm noteForm, Model model, Authentication authentication, RedirectAttributes redirectAttributes){
+    public String saveNote(@ModelAttribute("noteForm") NoteForm noteForm, Model model, Authentication authentication){
         String notesError = null;
         Users userLogged = userService.getUser(authentication.getName());
         if(userLogged != null){
@@ -60,31 +60,31 @@ public class NotesController {
             return "login";
         }
         if(notesError == null){
-            model.addAttribute("noteSuccess", "You successfully saved your Note!");
+            model.addAttribute("success", true);
         }else{
-            model.addAttribute("noteError", notesError);
+            model.addAttribute("error", notesError);
         }
         //model.addAttribute("allNotesByUser", notesService.readNotes(userLogged.getUserid()));
-        redirectAttributes.addFlashAttribute("activeTab", "notes");
+        model.addAttribute("activeTab", "notes");
 
-        return "redirect:/home";
+        return "result";
     }
 
     @GetMapping("/delete-note/{noteid}")
-    public String deleteNote(@PathVariable("noteid") String noteid, @ModelAttribute("noteForm") NoteForm noteForm, Model model, Authentication authentication, RedirectAttributes redirectAttributes){
+    public String deleteNote(@PathVariable("noteid") String noteid, @ModelAttribute("noteForm") NoteForm noteForm, Model model, Authentication authentication){
         Users userLogged = userService.getUser(authentication.getName());
 
         if(userLogged != null) {
             int rowsDeleted = notesService.deleteNote(Integer.parseInt(noteid));
             if(rowsDeleted < 0){
-                model.addAttribute("noteError", "Failed to delete your Note!");
+                model.addAttribute("error", "Failed to delete your Note!");
             }else{
-                model.addAttribute("noteSuccess", "You successfully deleted your Note!");
+                model.addAttribute("success", true);
             }
             //model.addAttribute("allNotesByUser", notesService.readNotes(userLogged.getUserid()));
-            redirectAttributes.addFlashAttribute("activeTab", "notes");
+            model.addAttribute("activeTab", "notes");
 
-            return "redirect:/home";
+            return "result";
         }else{
             return "login";
         }

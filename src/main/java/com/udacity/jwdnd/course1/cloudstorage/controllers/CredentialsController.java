@@ -25,7 +25,7 @@ public class CredentialsController {
     }
 
     @PostMapping("/save-credential")
-    public String saveCredential(@ModelAttribute("credentialForm") CredentialForm credentialForm, Model model, Authentication authentication, RedirectAttributes redirectAttributes){
+    public String saveCredential(@ModelAttribute("credentialForm") CredentialForm credentialForm, Model model, Authentication authentication){
         String credentialError = null;
         Users userLogged = userService.getUser(authentication.getName());
         if(userLogged != null){
@@ -52,32 +52,32 @@ public class CredentialsController {
         }
 
         if(credentialError == null){
-            model.addAttribute("credentialSuccess", "You successfully saved your Credential!");
+            model.addAttribute("success", true);
         }else{
-            model.addAttribute("credentialError", credentialError);
+            model.addAttribute("error", credentialError);
         }
         //model.addAttribute("credentials", credentialsService.readCredentials(userLogged.getUserid()));
-        redirectAttributes.addFlashAttribute("activeTab", "creds");
+        model.addAttribute("activeTab", "creds");
 
-        return "redirect:/home";
+        return "result";
     }
 
     @GetMapping("/delete-credential/{credentialid}")
-    public String deleteCredential(@PathVariable("credentialid") String credentialid, @ModelAttribute("credentialForm") CredentialForm credentialForm, Model model, Authentication authentication, RedirectAttributes redirectAttributes) {
+    public String deleteCredential(@PathVariable("credentialid") String credentialid, @ModelAttribute("credentialForm") CredentialForm credentialForm, Model model, Authentication authentication) {
         Users userLogged = userService.getUser(authentication.getName());
 
         if (userLogged != null) {
             int rowsDeleted = credentialsService.deleteCredential(Integer.parseInt(credentialid));
             if (rowsDeleted < 0) {
-                model.addAttribute("credentialError", "Failed to delete your credential!");
+                model.addAttribute("error", "Failed to delete your credential!");
             } else {
-                model.addAttribute("credentialSuccess", "You successfully deleted your Credential!");
+                model.addAttribute("success", true);
             }
 
             //model.addAttribute("credentials", credentialsService.readCredentials(userLogged.getUserid()));
-            redirectAttributes.addFlashAttribute("activeTab", "creds");
+            model.addAttribute("activeTab", "creds");
 
-            return "redirect:/home";
+            return "result";
         } else {
             return "login";
         }

@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Controller
+//@ControllerAdvice
 public class FilesController {
     private final FilesService filesService;
     private final UserService userService;
@@ -44,7 +46,7 @@ public class FilesController {
 */
 
     @PostMapping("/file-upload")
-    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model, RedirectAttributes redirectAttributes){
+    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model){
         String uploadError = null;
         Users userLogged = userService.getUser(authentication.getName());
         if(userLogged != null) {
@@ -68,26 +70,29 @@ public class FilesController {
                 }
             } catch (IOException e) {
                 uploadError = "Failed to upload file!";
+            } catch (MaxUploadSizeExceededException e){
+                uploadError = "File size exceeds limit!";
             }
         }else{
             return "login";
         }
         if(uploadError == null){
-            model.addAttribute("success", "You successfully upload your file!");
+            //model.addAttribute("success", "You successfully upload your file!");
+            model.addAttribute("success", true);
         }else{
             model.addAttribute("error", uploadError);
         }
         //model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
-        redirectAttributes.addFlashAttribute("activeTab", "files");
+        //redirectAttributes.addFlashAttribute("activeTab", "files");
+        model.addAttribute("activeTab", "files");
 
-        return "redirect:/home";
+        return "result";
     }
 
     @GetMapping("/file-download/{fileid}")
     public ResponseEntity<Resource> downlodFile(@PathVariable("fileid") String fileid, Model model, Authentication authentication){
         Users userLogged = userService.getUser(authentication.getName());
         if(userLogged != null) {
-            //model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
             Files file = filesService.downloadUserFile(Integer.parseInt(fileid));
             if(file != null) {
                 ByteArrayResource resource = new ByteArrayResource(file.getFiledata());
@@ -96,30 +101,29 @@ public class FilesController {
                 headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
                 headers.add("Pragma", "no-cache");
                 headers.add("Expires", "0");
-
-
                 return ResponseEntity.ok()
                         .headers(headers)
                         .contentLength(Long.parseLong(file.getFilesize()))
                         .contentType(MediaType.parseMediaType(file.getContenttype()))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""
+                                + file.getFilename() + "\"")
                         .body(resource);
             }else{
-                model.addAttribute("error", "Failed to view/download file!");
 
                 HttpHeaders headers = new HttpHeaders();
-                headers.add("Location", "/home");
-                return new ResponseEntity<Resource>(headers, HttpStatus.BAD_REQUEST);
+                headers.add("Location", "/result");
+                return new ResponseEntity<Resource>(headers, HttpStatus.OK);
             }
         }else{
             HttpHeaders headers = new HttpHeaders();
             headers.add("Location", "/login");
-            return new ResponseEntity<Resource>(headers, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<Resource>(headers, HttpStatus.OK);
         }
 
     }
 
     @GetMapping("/file-delete/{fileid}")
-    public String deleteFile(@PathVariable("fileid") String fileid, Model model, Authentication authentication, RedirectAttributes redirectAttributes){
+    public String deleteFile(@PathVariable("fileid") String fileid, Model model, Authentication authentication){
         Users userLogged = userService.getUser(authentication.getName());
 
         if(userLogged != null) {
@@ -127,12 +131,13 @@ public class FilesController {
             if(rowsDeleted < 0){
                 model.addAttribute("error", "Failed to delete your file!");
             }else{
-                model.addAttribute("success", "You successfully deleted your file!");
+                //model.addAttribute("success", "You successfully deleted your file!");
+                model.addAttribute("success", true);
             }
             //model.addAttribute("allFilesByUser", filesService.getUserFiles(userLogged.getUserid()));
-            redirectAttributes.addFlashAttribute("activeTab", "notes");
-
-            return "redirect:/home";
+            //redirectAttributes.addFlashAttribute("activeTab", "notes");
+            model.addAttribute("activeTab", "files");
+            return "result";
         }else{
             return "login";
         }
